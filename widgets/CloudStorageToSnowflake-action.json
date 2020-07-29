@@ -1,0 +1,550 @@
+{
+  "metadata": {
+    "spec-version": "1.5"
+  },
+  "configuration-groups": [
+    {
+      "label": "Basic",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Account Name",
+          "name": "accountName"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Database",
+          "name": "database"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Schema",
+          "name": "schemaName"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Warehouse",
+          "name": "warehouse"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Role",
+          "name": "role"
+        },
+        {
+          "widget-type": "select",
+          "label": "Source Type",
+          "name": "sourceType",
+          "widget-attributes": {
+            "values": [
+              "From Stage / Location",
+              "From Query"
+            ],
+            "default": "From Stage / Location"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Source Stage / Location",
+          "name": "sourcePath"
+        },
+        {
+          "widget-type": "textarea",
+          "label": "Source Query",
+          "name": "sourceQuery"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Destination Table",
+          "name": "destinationTable"
+        }
+      ]
+    },
+    {
+      "label": "Credentials",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Username",
+          "name": "username"
+        },
+        {
+          "widget-type": "password",
+          "label": "Password",
+          "name": "password"
+        }
+      ]
+    },
+    {
+      "label": "Key Pair Authentication",
+      "properties": [
+        {
+          "widget-type": "toggle",
+          "label": "Key Pair Authentication Enabled",
+          "name": "keyPairEnabled",
+          "widget-attributes": {
+            "default": "false",
+            "on": {
+              "value": "true",
+              "label": "True"
+            },
+            "off": {
+              "value": "false",
+              "label": "False"
+            }
+          }
+        },
+        {
+          "widget-type": "textarea",
+          "label": "Private Key",
+          "name": "privateKey"
+        },
+        {
+          "widget-type": "password",
+          "label": "Key File Passphrase",
+          "name": "passphrase"
+        }
+      ]
+    },
+    {
+      "label": "OAuth2",
+      "properties": [
+        {
+          "widget-type": "toggle",
+          "label": "OAuth2 Enabled",
+          "name": "oauth2Enabled",
+          "widget-attributes": {
+            "default": "false",
+            "on": {
+              "value": "true",
+              "label": "True"
+            },
+            "off": {
+              "value": "false",
+              "label": "False"
+            }
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Client ID",
+          "name": "clientId"
+        },
+        {
+          "widget-type": "password",
+          "label": "Client Secret",
+          "name": "clientSecret"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Refresh Token",
+          "name": "refreshToken"
+        }
+      ]
+    },
+    {
+      "label": "Cloud Provider Parameters",
+      "properties": [
+        {
+          "widget-type": "toggle",
+          "label": "Use Cloud Provider Parameters",
+          "name": "useCloudProviderParameters",
+          "widget-attributes": {
+            "default": "false",
+            "on": {
+              "value": "true",
+              "label": "True"
+            },
+            "off": {
+              "value": "false",
+              "label": "False"
+            }
+          }
+        },
+        {
+          "widget-type": "select",
+          "label": "Cloud Provider",
+          "name": "cloudProvider",
+          "widget-attributes": {
+            "values": [
+              "NONE",
+              "GCP",
+              "AWS",
+              "Microsoft Azure"
+            ],
+            "default": "NONE"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Storage Integration",
+          "name": "storageIntegration"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Key Id",
+          "name": "awsKeyId"
+        },
+        {
+          "widget-type": "securekey-text",
+          "label": "Secret Key",
+          "name": "awsSecretKey"
+        },
+        {
+          "widget-type": "securekey-text",
+          "label": "Token",
+          "name": "awsToken"
+        },
+        {
+          "widget-type": "securekey-text",
+          "label": "SAS Token",
+          "name": "azureSasToken"
+        },
+        {
+          "widget-type": "toggle",
+          "label": "Files Encrypted",
+          "name": "filesEncrypted",
+          "widget-attributes": {
+            "default": "false",
+            "on": {
+              "value": "true",
+              "label": "True"
+            },
+            "off": {
+              "value": "false",
+              "label": "False"
+            }
+          }
+        },
+        {
+          "widget-type": "select",
+          "label": "Encryption type",
+          "name": "encryptionType",
+          "widget-attributes": {
+            "values": [
+              "NONE",
+              "AWS_CSE",
+              "AWS_SSE_S3",
+              "AWS_SSE_KMS",
+              "AZURE_CSE",
+              "GCS_SSE_KMS"
+            ],
+            "default": "NONE"
+          }
+        },
+        {
+          "widget-type": "textarea",
+          "label": "Master Key",
+          "name": "masterKey"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "KMS Key Id",
+          "name": "kmsKeyId"
+        }
+      ]
+    },
+    {
+      "label": "File Format",
+      "properties": [
+        {
+          "widget-type": "select",
+          "label": "File Format Filtering Policy",
+          "name": "fileFormatFilteringPolicy",
+          "widget-attributes": {
+            "values": [
+              "Undefined",
+              "By File Type",
+              "By Existing Format Specification"
+            ],
+            "default": "Undefined"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Format Name",
+          "name": "formatName"
+        },
+        {
+          "widget-type": "select",
+          "label": "Format Type",
+          "name": "formatType",
+          "widget-attributes": {
+            "values": [
+              "NONE",
+              "CSV",
+              "JSON",
+              "AVRO",
+              "ORC",
+              "PARQUET",
+              "XML"
+            ],
+            "default": "NONE"
+          }
+        },
+        {
+          "widget-type": "keyvalue",
+          "label": "Format Type Options",
+          "name": "formatTypeOptions",
+          "widget-attributes": {
+            "showDelimiter": "false",
+            "kv-delimiter": "=",
+            "key-placeholder": "Option",
+            "value-placeholder": "Value"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Advanced",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Files",
+          "name": "files"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Pattern",
+          "name": "pattern"
+        },
+        {
+          "widget-type": "keyvalue",
+          "label": "Copy Options",
+          "name": "copyOptions",
+          "widget-attributes": {
+            "showDelimiter": "false",
+            "kv-delimiter": "=",
+            "key-placeholder": "Option",
+            "value-placeholder": "Value"
+          }
+        },
+        {
+          "widget-type": "keyvalue",
+          "label": "Connection Arguments",
+          "name": "connectionArguments",
+          "widget-attributes": {
+            "showDelimiter": "false",
+            "key-placeholder": "Connection Argument",
+            "value-placeholder": "Connection Argument Value"
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": [],
+  "filters": [
+    {
+      "name": "SourceFilterPath",
+      "condition": {
+        "property": "sourceType",
+        "operator": "equal to",
+        "value": "From Stage / Location"
+      },
+      "show": [
+        {
+          "name": "sourcePath",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "SourceFilterQuery",
+      "condition": {
+        "property": "sourceType",
+        "operator": "equal to",
+        "value": "From Query"
+      },
+      "show": [
+        {
+          "name": "sourceQuery",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "KeyPairAuthenticationEnabledFilter",
+      "condition": {
+        "property": "keyPairEnabled",
+        "operator": "equal to",
+        "value": "true"
+      },
+      "show": [
+        {
+          "name": "privateKey",
+          "type": "property"
+        },
+        {
+          "name": "passphrase",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "OAuth2EnabledFilter",
+      "condition": {
+        "property": "oauth2Enabled",
+        "operator": "equal to",
+        "value": "true"
+      },
+      "show": [
+        {
+          "name": "clientId",
+          "type": "property"
+        },
+        {
+          "name": "clientSecret",
+          "type": "property"
+        },
+        {
+          "name": "refreshToken",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "CloudProviderParametersFilter",
+      "condition": {
+        "property": "useCloudProviderParameters",
+        "operator": "equal to",
+        "value": "true"
+      },
+      "show": [
+        {
+          "name": "cloudProvider",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "AwsOrGCPOrAzureFilter",
+      "condition": {
+        "expression": "cloudProvider != 'NONE'"
+      },
+      "show": [
+        {
+          "name": "storageIntegration",
+          "type": "property"
+        },
+        {
+          "name": "filesEncrypted",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "AwsCloudProviderFilter",
+      "condition": {
+        "property": "cloudProvider",
+        "operator": "equal to",
+        "value": "AWS"
+      },
+      "show": [
+        {
+          "name": "awsKeyId",
+          "type": "property"
+        },
+        {
+          "name": "awsSecretKey",
+          "type": "property"
+        },
+        {
+          "name": "awsToken",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "AzureCloudProviderFilter",
+      "condition": {
+        "property": "cloudProvider",
+        "operator": "equal to",
+        "value": "Microsoft Azure"
+      },
+      "show": [
+        {
+          "name": "azureSasToken",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "FilesEncryptedFilter",
+      "condition": {
+        "property": "filesEncrypted",
+        "operator": "equal to",
+        "value": "true"
+      },
+      "show": [
+        {
+          "name": "encryptionType",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "CSEEncryptionTypeFilter",
+      "condition": {
+        "expression": "encryptionType == 'AWS_CSE' || encryptionType == 'AZURE_CSE'"
+      },
+      "show": [
+        {
+          "name": "masterKey",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "KMSEncryptionTypeFilter",
+      "condition": {
+        "expression": "encryptionType == 'AWS_SSE_KMS' || encryptionType == 'GCS_SSE_KMS'"
+      },
+      "show": [
+        {
+          "name": "kmsKeyId",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "NameFileFormatFilter",
+      "condition": {
+        "property": "fileFormatFilteringPolicy",
+        "operator": "equal to",
+        "value": "By Existing Format Specification"
+      },
+      "show": [
+        {
+          "name": "formatName",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "TypeFileFormatFilter",
+      "condition": {
+        "property": "fileFormatFilteringPolicy",
+        "operator": "equal to",
+        "value": "By File Type"
+      },
+      "show": [
+        {
+          "name": "formatType",
+          "type": "property"
+        }
+      ]
+    },
+    {
+      "name": "FileTypeFilter",
+      "condition": {
+        "expression": "formatType != 'ORC' && formatType != 'NONE'"
+      },
+      "show": [
+        {
+          "name": "formatTypeOptions",
+          "type": "property"
+        }
+      ]
+    }
+  ]
+}
