@@ -17,20 +17,26 @@
 package io.cdap.plugin.snowflake.source.batch;
 
 import au.com.bytecode.opencsv.CSVReader;
+
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * RecordReader implementation, which reads object from Snowflake.
  */
 public class SnowflakeRecordReader extends RecordReader<NullWritable, Map<String, String>> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(SnowflakeRecordReader.class);
   private final String stageSplit;
   private final SnowflakeSourceAccessor snowflakeAccessor;
   private CSVReader csvReader;
@@ -62,7 +68,10 @@ public class SnowflakeRecordReader extends RecordReader<NullWritable, Map<String
   @Override
   public Map<String, String> getCurrentValue() {
     Map<String, String> result = new HashMap<>();
-    for (int i = 0; i < headers.length; i++) {
+    if (headers.length != nextLine.length) {
+      LOG.warn("Row with wrong data in csv -> {}", Arrays.stream(nextLine).collect(Collectors.joining(",")));
+    }
+    for (int i = 0; i < headers.length && i < nextLine.length; i++) {
       result.put(headers[i], nextLine[i]);
     }
     return result;
