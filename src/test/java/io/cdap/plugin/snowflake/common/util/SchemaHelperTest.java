@@ -64,15 +64,16 @@ public class SchemaHelperTest {
 
   @Test
   public void testGetSchemaFromSnowflakeUnknownType() throws IOException {
+    String importQuery = "SELECT * FROM someTable";
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
     SnowflakeSourceAccessor snowflakeAccessor = Mockito.mock(SnowflakeSourceAccessor.class);
 
     List<SnowflakeFieldDescriptor> sample = new ArrayList<>();
     sample.add(new SnowflakeFieldDescriptor("field1", -1000, false));
 
-    Mockito.when(snowflakeAccessor.describeQuery(null)).thenReturn(sample);
+    Mockito.when(snowflakeAccessor.describeQuery(importQuery)).thenReturn(sample);
 
-    SchemaHelper.getSchema(snowflakeAccessor, null, collector, null);
+    SchemaHelper.getSchema(snowflakeAccessor, null, collector, importQuery);
 
     ValidationAssertions.assertValidationFailed(
       collector, Collections.singletonList(SnowflakeBatchSourceConfig.PROPERTY_SCHEMA));
@@ -80,6 +81,7 @@ public class SchemaHelperTest {
 
   @Test
   public void testGetSchemaFromSnowflake() throws IOException {
+    String importQuery = "SELECT * FROM someTable";
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
     SnowflakeSourceAccessor snowflakeAccessor = Mockito.mock(SnowflakeSourceAccessor.class);
 
@@ -137,9 +139,9 @@ public class SchemaHelperTest {
       Schema.Field.of("field132", Schema.decimalOf(38))
     );
 
-    Mockito.when(snowflakeAccessor.describeQuery(null)).thenReturn(sample);
+    Mockito.when(snowflakeAccessor.describeQuery(importQuery)).thenReturn(sample);
 
-    Schema actual = SchemaHelper.getSchema(snowflakeAccessor, null, collector, null);
+    Schema actual = SchemaHelper.getSchema(snowflakeAccessor, null, collector, importQuery);
 
     Assert.assertTrue(collector.getValidationFailures().isEmpty());
     Assert.assertEquals(expected, actual);

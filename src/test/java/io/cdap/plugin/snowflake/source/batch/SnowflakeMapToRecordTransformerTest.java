@@ -50,8 +50,8 @@ public class SnowflakeMapToRecordTransformerTest {
     row.put("COLUMN_CHARACTER", "2");
     row.put("COLUMN_STRING", "text_115");
     row.put("COLUMN_TEXT", "text_116");
-    row.put("COLUMN_BINARY", "text_117");
-    row.put("COLUMN_VARBINARY", "text_118");
+    row.put("COLUMN_BINARY", "746578745f313137");
+    row.put("COLUMN_VARBINARY", "746578745f313138");
     row.put("COLUMN_BOOLEAN", "true");
     row.put("COLUMN_DATE", "2019-01-01");
     row.put("COLUMN_DATETIME", "2019-01-01T01:01:01+00:00");

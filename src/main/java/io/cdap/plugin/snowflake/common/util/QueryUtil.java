@@ -22,7 +22,7 @@ package io.cdap.plugin.snowflake.common.util;
 public class QueryUtil {
 
   // Matches "limit <number>". Also "limit $$$$" and "limit ''" which means unlimited in Snowflake.
-  private static final String LIMIT_PATTERN = "(?i)LIMIT (''|\\$\\$\\$\\$|\\d+)";
+  private static final String LIMIT_PATTERN = "(?i)LIMIT (NULL|''|\\$\\$\\$\\$|\\d+)";
   private static final String LIMIT_STRING = "limit %s";
 
   private QueryUtil() {
