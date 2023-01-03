@@ -17,6 +17,7 @@
 package io.cdap.plugin.snowflake.common;
 
 import io.cdap.cdap.etl.mock.test.HydratorTestBase;
+import io.cdap.cdap.test.TestConfiguration;
 import io.cdap.plugin.snowflake.Constants;
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessorTest;
 import io.cdap.plugin.snowflake.source.batch.SnowflakeBatchSourceConfig;
@@ -24,6 +25,7 @@ import io.cdap.plugin.snowflake.source.batch.SnowflakeBatchSourceConfigBuilder;
 import net.snowflake.client.jdbc.SnowflakeBasicDataSource;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestName;
@@ -54,6 +56,9 @@ import java.sql.SQLException;
 public abstract class BaseSnowflakeTest extends HydratorTestBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(SnowflakeAccessorTest.class);
+
+  @ClassRule
+  public static final TestConfiguration TEST_CONFIG = new TestConfiguration("explore.enabled", false);
 
   protected static final String ACCOUNT_NAME = System.getProperty("snowflake.test.account.name");
   protected static final String DATABASE = System.getProperty("snowflake.test.database");
