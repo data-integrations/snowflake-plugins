@@ -58,7 +58,7 @@ public class SchemaHelper {
 
   public static Schema getSchema(SnowflakeBatchSourceConfig config, FailureCollector collector) {
     if (!config.canConnect()) {
-      return null;
+      return getParsedSchema(config.getSchema());
     }
 
     SnowflakeSourceAccessor snowflakeSourceAccessor = new SnowflakeSourceAccessor(config);
@@ -69,11 +69,7 @@ public class SchemaHelper {
                                  FailureCollector collector, String importQuery) {
     try {
       if (!Strings.isNullOrEmpty(schema)) {
-        try {
-          return Schema.parseJson(schema);
-        } catch (IOException | IllegalStateException e) {
-          throw new SchemaParseException(e);
-        }
+        return getParsedSchema(schema);
       }
       return Strings.isNullOrEmpty(importQuery) ? null : getSchema(snowflakeAccessor, importQuery);
     } catch (SchemaParseException e) {
@@ -82,6 +78,17 @@ public class SchemaHelper {
         .withStacktrace(e.getStackTrace())
         .withConfigProperty(SnowflakeBatchSourceConfig.PROPERTY_SCHEMA);
       return null;
+    }
+  }
+
+  private static Schema getParsedSchema(String schema) {
+    if (Strings.isNullOrEmpty(schema)) {
+      return null;
+    }
+    try {
+      return Schema.parseJson(schema);
+    } catch (IOException | IllegalStateException e) {
+      throw new SchemaParseException(e);
     }
   }
 
