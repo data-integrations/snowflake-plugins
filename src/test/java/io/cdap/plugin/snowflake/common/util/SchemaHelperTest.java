@@ -25,6 +25,7 @@ import io.cdap.plugin.snowflake.source.batch.SnowflakeSourceAccessor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+
 import java.io.IOException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -145,5 +146,38 @@ public class SchemaHelperTest {
 
     Assert.assertTrue(collector.getValidationFailures().isEmpty());
     Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetSchemaWhenMacroIsEnabled() {
+    Schema expected = Schema.recordOf("test",
+            Schema.Field.of("test_field", Schema.nullableOf(Schema.of(Schema.Type.LONG)))
+    );
+
+    SnowflakeBatchSourceConfig mockConfig = Mockito.mock(SnowflakeBatchSourceConfig.class);
+    Mockito.when(mockConfig.canConnect()).thenReturn(false);
+    Mockito.when(mockConfig.getSchema()).thenReturn(expected.toString());
+
+    MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
+    Schema actual = SchemaHelper.getSchema(mockConfig, collector);
+
+    Assert.assertTrue(collector.getValidationFailures().isEmpty());
+    Assert.assertEquals(expected, actual);
+
+  }
+
+  @Test
+  public void testGetSchemaWhenMacroIsEnabledSchemaIsNull() {
+
+    SnowflakeBatchSourceConfig mockConfig = Mockito.mock(SnowflakeBatchSourceConfig.class);
+    Mockito.when(mockConfig.canConnect()).thenReturn(false);
+    Mockito.when(mockConfig.getSchema()).thenReturn(null);
+
+    MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
+    Schema actual = SchemaHelper.getSchema(mockConfig, collector);
+
+    Assert.assertTrue(collector.getValidationFailures().isEmpty());
+    Assert.assertNull(actual);
+
   }
 }
