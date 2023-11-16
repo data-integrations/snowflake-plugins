@@ -68,7 +68,7 @@ Data Types Mapping
 ----------
 
 | Snowflake Data Types           | CDAP Schema Data Type | Comment                                                   |
-| ------------------------------ | --------------------- | --------------------------------------------------------- |
+| ------------------------------ |-----------------------| --------------------------------------------------------- |
 | NUMBER                         | decimal               | Default precision and scale are (38,0).                   |
 | DECIMAL                        | decimal               | Synonymous with NUMBER.                                   |
 | NUMERIC                        | decimal               | Synonymous with NUMBER.                                   |
@@ -87,10 +87,10 @@ Data Types Mapping
 | DATE                           | date                  |                                                           |
 | DATETIME                       | timestamp             | Alias for TIMESTAMP_NTZ                                   |
 | TIME                           | time                  |                                                           |
-| TIMESTAMP                      | timestamp/string      | Alias for one of the TIMESTAMP variations (TIMESTAMP_NTZ by default).|
+| TIMESTAMP                      | timestamp             | Alias for one of the TIMESTAMP variations (TIMESTAMP_NTZ by default).|
 | TIMESTAMP_LTZ                  | timestamp             | TIMESTAMP with local time zone; time zone, if provided, is not stored.|
 | TIMESTAMP_NTZ                  | timestamp             | TIMESTAMP with no time zone; time zone, if provided, is not stored.|
-| TIMESTAMP_TZ                   | string                | TIMESTAMP with time zone.                                 |
+| TIMESTAMP_TZ                   | timestamp             | TIMESTAMP with time zone.                                 |
 | VARIANT                        | string                | A tagged universal type, which can store values of any other type, including OBJECT and ARRAY, up to a maximum size of 16 MB compressed.                                    |
 | OBJECT                         | string                | This will return a json with the data |
 | ARRAY                          | string                | This will return a json with the data |                                                  |

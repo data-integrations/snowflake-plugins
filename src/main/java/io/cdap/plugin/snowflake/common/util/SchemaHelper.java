@@ -51,6 +51,7 @@ public class SchemaHelper {
       .put(Types.BOOLEAN, Schema.of(Schema.Type.BOOLEAN))
       .put(Types.BIGINT, Schema.decimalOf(38))
       .put(Types.SMALLINT, Schema.decimalOf(38))
+      .put(Types.TIMESTAMP_WITH_TIMEZONE, Schema.of(Schema.LogicalType.TIMESTAMP_MICROS))
       .build();
 
   private SchemaHelper() {
