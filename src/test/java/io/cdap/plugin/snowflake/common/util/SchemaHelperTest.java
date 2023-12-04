@@ -110,7 +110,9 @@ public class SchemaHelperTest {
       new SnowflakeFieldDescriptor("field121", Types.BIGINT, true),
       new SnowflakeFieldDescriptor("field122", Types.BIGINT, false),
       new SnowflakeFieldDescriptor("field131", Types.SMALLINT, true),
-      new SnowflakeFieldDescriptor("field132", Types.SMALLINT, false));
+      new SnowflakeFieldDescriptor("field132", Types.SMALLINT, false),
+      new SnowflakeFieldDescriptor("field133", Types.TIMESTAMP_WITH_TIMEZONE, false),
+      new SnowflakeFieldDescriptor("field134", Types.TIMESTAMP_WITH_TIMEZONE, true));
 
     Schema expected = Schema.recordOf(
       "data",
@@ -137,7 +139,9 @@ public class SchemaHelperTest {
       Schema.Field.of("field121", Schema.nullableOf(Schema.decimalOf(38))),
       Schema.Field.of("field122", Schema.decimalOf(38)),
       Schema.Field.of("field131", Schema.nullableOf(Schema.decimalOf(38))),
-      Schema.Field.of("field132", Schema.decimalOf(38))
+      Schema.Field.of("field132", Schema.decimalOf(38)),
+      Schema.Field.of("field133", Schema.of(Schema.LogicalType.TIMESTAMP_MICROS)),
+      Schema.Field.of("field134", Schema.nullableOf(Schema.of(Schema.LogicalType.TIMESTAMP_MICROS)))
     );
 
     Mockito.when(snowflakeAccessor.describeQuery(importQuery)).thenReturn(sample);
