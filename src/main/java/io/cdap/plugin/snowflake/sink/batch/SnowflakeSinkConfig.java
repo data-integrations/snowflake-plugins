@@ -98,8 +98,8 @@ public class SnowflakeSinkConfig extends BaseSnowflakeConfig {
    * @param schema input schema to check
    */
   private void validateInputSchema(Schema schema, FailureCollector failureCollector) {
-    // schema can be null in case it is a macro
-    if (schema == null) {
+    // return if schema is null or if any of the connection properties or table name is macro
+    if (schema == null || !canConnect() || containsMacro(PROPERTY_TABLE_NAME)) {
       return;
     }
 

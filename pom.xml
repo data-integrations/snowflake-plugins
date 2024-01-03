@@ -47,7 +47,7 @@
     <powermock.version>1.7.4</powermock.version>
     <guice.version>4.0</guice.version>
     <opencsv.version>2.4</opencsv.version>
-    <snowflake-jdbc.version>3.13.24</snowflake-jdbc.version>
+    <snowflake-jdbc.version>3.14.4</snowflake-jdbc.version>
   </properties>
 
   <repositories>
