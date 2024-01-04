@@ -111,6 +111,10 @@ public class SnowflakeAccessor {
     if (config.getOauth2Enabled()) {
       String accessToken = OAuthUtil.getAccessTokenByRefreshToken(HttpClients.createDefault(), config);
       dataSource.setOauthToken(accessToken);
+      // The recommend way to pass token is in the password when you use the driver with connection pool.
+      // This is also a mandatory field, so adding the same.
+      // Refer https://github.com/snowflakedb/snowflake-jdbc/issues/1175
+      dataSource.setPassword(accessToken);
     } else if (config.getKeyPairEnabled()) {
       dataSource.setUser(config.getUsername());
 
