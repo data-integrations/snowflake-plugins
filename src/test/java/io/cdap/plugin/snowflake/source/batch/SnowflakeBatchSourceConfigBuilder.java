@@ -38,6 +38,7 @@ public class SnowflakeBatchSourceConfigBuilder {
     "",
     0L,
     "",
+    "",
     "");
 
   private String referenceName;
@@ -57,6 +58,7 @@ public class SnowflakeBatchSourceConfigBuilder {
   private Long maxSplitSize;
   private String connectionArguments;
   private String schema;
+  private String tableName;
 
   public SnowflakeBatchSourceConfigBuilder() {
   }
@@ -79,6 +81,7 @@ public class SnowflakeBatchSourceConfigBuilder {
     this.maxSplitSize = config.getMaxSplitSize();
     this.connectionArguments = config.getConnectionArguments();
     this.schema = config.getSchema();
+    this.tableName = config.getTableName();
   }
 
   public SnowflakeBatchSourceConfigBuilder setReferenceName(String referenceName) {
@@ -166,6 +169,11 @@ public class SnowflakeBatchSourceConfigBuilder {
     return this;
   }
 
+  public SnowflakeBatchSourceConfigBuilder setTableName(String tableName) {
+    this.tableName = tableName;
+    return this;
+  }
+
   public SnowflakeBatchSourceConfig build() {
     return new SnowflakeBatchSourceConfig(referenceName,
                                           accountName,
@@ -183,6 +191,7 @@ public class SnowflakeBatchSourceConfigBuilder {
                                           refreshToken,
                                           maxSplitSize,
                                           connectionArguments,
-                                          schema);
+                                          schema,
+                                          tableName);
   }
 }

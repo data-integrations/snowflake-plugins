@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class SchemaHelperTest {
     );
 
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
-    Schema actual = SchemaHelper.getSchema(null, expected.toString(), collector, null);
+    Schema actual = SchemaHelper.getSchema(null, expected.toString(), collector, null, null);
 
     Assert.assertTrue(collector.getValidationFailures().isEmpty());
     Assert.assertEquals(expected, actual);
@@ -57,7 +58,7 @@ public class SchemaHelperTest {
   @Test
   public void testGetSchemaInvalidJson() {
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
-    SchemaHelper.getSchema(null, "{}", collector, null);
+    SchemaHelper.getSchema(null, "{}", collector, null, null);
 
     ValidationAssertions.assertValidationFailed(
       collector, Collections.singletonList(SnowflakeBatchSourceConfig.PROPERTY_SCHEMA));
@@ -66,6 +67,7 @@ public class SchemaHelperTest {
   @Test
   public void testGetSchemaFromSnowflakeUnknownType() throws IOException {
     String importQuery = "SELECT * FROM someTable";
+    String tableName = "USER";
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
     SnowflakeSourceAccessor snowflakeAccessor = Mockito.mock(SnowflakeSourceAccessor.class);
 
@@ -74,15 +76,16 @@ public class SchemaHelperTest {
 
     Mockito.when(snowflakeAccessor.describeQuery(importQuery)).thenReturn(sample);
 
-    SchemaHelper.getSchema(snowflakeAccessor, null, collector, importQuery);
+    SchemaHelper.getSchema(snowflakeAccessor, null, collector, tableName, importQuery);
 
     ValidationAssertions.assertValidationFailed(
       collector, Collections.singletonList(SnowflakeBatchSourceConfig.PROPERTY_SCHEMA));
   }
 
   @Test
-  public void testGetSchemaFromSnowflake() throws IOException {
+  public void testGetSchemaFromSnowflake() throws IOException, SQLException {
     String importQuery = "SELECT * FROM someTable";
+    String tableName = "USER";
     MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
     SnowflakeSourceAccessor snowflakeAccessor = Mockito.mock(SnowflakeSourceAccessor.class);
 
@@ -145,8 +148,9 @@ public class SchemaHelperTest {
     );
 
     Mockito.when(snowflakeAccessor.describeQuery(importQuery)).thenReturn(sample);
+    Mockito.when(snowflakeAccessor.describeTable(Mockito.any(), Mockito.eq(tableName))).thenReturn(sample);
 
-    Schema actual = SchemaHelper.getSchema(snowflakeAccessor, null, collector, importQuery);
+    Schema actual = SchemaHelper.getSchema(snowflakeAccessor, null, collector, tableName, importQuery);
 
     Assert.assertTrue(collector.getValidationFailures().isEmpty());
     Assert.assertEquals(expected, actual);

@@ -25,6 +25,8 @@ log in to Snowflake, minus the "snowflakecomputing.com"). E.g. "myaccount.us-cen
 
 **Role:** Role to use (e.g. `ACCOUNTADMIN`).
 
+**Table Name:** The name of the table to retrieve the schema.
+
 **Import Query:** Query for data import.
 
 ### Credentials

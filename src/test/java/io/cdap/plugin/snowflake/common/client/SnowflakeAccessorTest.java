@@ -91,6 +91,41 @@ public class SnowflakeAccessorTest extends BaseSnowflakeTest {
   }
 
   @Test
+  public void testDescribeTable() throws Exception {
+    String schemaName = "TEST_SCHEMA";
+    String tableName = "TEST_TABLE";
+    List<SnowflakeFieldDescriptor> expected = Arrays.asList(
+      new SnowflakeFieldDescriptor("COLUMN_NUMBER", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_DECIMAL", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_NUMERIC", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_INT", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_INTEGER", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_BIGINT", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_SMALLINT", -5, true),
+      new SnowflakeFieldDescriptor("COLUMN_FLOAT", 8, true),
+      new SnowflakeFieldDescriptor("COLUMN_DOUBLE", 8, true),
+      new SnowflakeFieldDescriptor("COLUMN_REAL", 8, true),
+      new SnowflakeFieldDescriptor("COLUMN_VARCHAR", 12, true),
+      new SnowflakeFieldDescriptor("COLUMN_CHAR", 12, true),
+      new SnowflakeFieldDescriptor("COLUMN_TEXT", 12, true),
+      new SnowflakeFieldDescriptor("COLUMN_BINARY", -2, true),
+      new SnowflakeFieldDescriptor("COLUMN_BOOLEAN", 16, true),
+      new SnowflakeFieldDescriptor("COLUMN_DATE", 91, true),
+      new SnowflakeFieldDescriptor("COLUMN_TIMESTAMP", 93, true),
+      new SnowflakeFieldDescriptor("COLUMN_VARIANT", 12, true),
+      new SnowflakeFieldDescriptor("COLUMN_OBJECT", 12, true),
+      new SnowflakeFieldDescriptor("COLUMN_ARRAY", 12, true)
+    );
+
+    List<SnowflakeFieldDescriptor> actual = snowflakeAccessor.describeTable(String.valueOf(Constants.TEST_TABLE_SCHEMA),
+                                                                            Constants.TEST_TABLE);
+
+    Assert.assertNotNull(actual);
+    Assert.assertFalse(actual.isEmpty());
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
   public void testPrepareStageSplits() throws Exception {
     Pattern expected = Pattern.compile("cdap_stage/result.*data__0_0_0\\.csv\\.gz");
 

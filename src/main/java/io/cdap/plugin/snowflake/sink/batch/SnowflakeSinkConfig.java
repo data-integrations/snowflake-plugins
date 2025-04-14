@@ -44,6 +44,7 @@ public class SnowflakeSinkConfig extends BaseSnowflakeConfig {
   @Name(PROPERTY_TABLE_NAME)
   @Description("Name of the table to insert records into.")
   @Macro
+  @Nullable
   private String tableName;
 
   @Name(PROPERTY_MAX_FILE_SIZE)
