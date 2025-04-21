@@ -38,7 +38,9 @@ public class SnowflakeBatchSourceConfigBuilder {
     "",
     0L,
     "",
-    "");
+    "",
+    "",
+    ImportQueryType.IMPORT_QUERY.name());
 
   private String referenceName;
   private String accountName;
@@ -57,6 +59,8 @@ public class SnowflakeBatchSourceConfigBuilder {
   private Long maxSplitSize;
   private String connectionArguments;
   private String schema;
+  private String tableName;
+  private String importQueryType;
 
   public SnowflakeBatchSourceConfigBuilder() {
   }
@@ -79,6 +83,8 @@ public class SnowflakeBatchSourceConfigBuilder {
     this.maxSplitSize = config.getMaxSplitSize();
     this.connectionArguments = config.getConnectionArguments();
     this.schema = config.getSchema();
+    this.tableName = config.getTableName();
+    this.importQueryType = config.getImportQueryType();
   }
 
   public SnowflakeBatchSourceConfigBuilder setReferenceName(String referenceName) {
@@ -166,6 +172,16 @@ public class SnowflakeBatchSourceConfigBuilder {
     return this;
   }
 
+  public SnowflakeBatchSourceConfigBuilder setTableName(String tableName) {
+    this.tableName = tableName;
+    return this;
+  }
+
+  public SnowflakeBatchSourceConfigBuilder setImportQueryType(String importQueryType) {
+    this.importQueryType = importQueryType;
+    return this;
+  }
+
   public SnowflakeBatchSourceConfig build() {
     return new SnowflakeBatchSourceConfig(referenceName,
                                           accountName,
@@ -183,6 +199,8 @@ public class SnowflakeBatchSourceConfigBuilder {
                                           refreshToken,
                                           maxSplitSize,
                                           connectionArguments,
-                                          schema);
+                                          schema,
+                                          tableName,
+                                          importQueryType);
   }
 }
