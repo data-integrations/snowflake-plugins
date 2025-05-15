@@ -29,8 +29,8 @@
     <surefire.redirectTestOutputToFile>true</surefire.redirectTestOutputToFile>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- version properties -->
-    <cdap.version>6.11.0-SNAPSHOT</cdap.version>
-    <hydrator.version>2.13.0-SNAPSHOT</hydrator.version>
+    <cdap.version>6.11.0</cdap.version>
+    <hydrator.version>2.13.0</hydrator.version>
     <commons.csv.version>1.6</commons.csv.version>
     <hadoop.version>3.3.6</hadoop.version>
     <spark3.version>3.3.2</spark3.version>
