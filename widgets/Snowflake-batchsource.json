@@ -58,7 +58,17 @@
         {
           "widget-type": "textbox",
           "label": "Table Name",
-          "name": "tableName"
+          "name": "tableName",
+          "plugin-function": {
+            "label": "Get Schema",
+            "widget": "outputSchema",
+            "output-property": "schema",
+            "omit-properties": [
+              {
+                "name": "schema"
+              }
+            ]
+          }
         },
         {
           "widget-type": "textarea",
