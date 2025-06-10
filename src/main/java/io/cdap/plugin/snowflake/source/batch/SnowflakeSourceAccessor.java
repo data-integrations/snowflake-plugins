@@ -17,9 +17,11 @@
 package io.cdap.plugin.snowflake.source.batch;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.google.common.base.Strings;
+import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessor;
 import io.cdap.plugin.snowflake.common.util.QueryUtil;
-import io.cdap.plugin.snowflake.sink.batch.SnowflakeSinkAccessor;
+import io.cdap.plugin.snowflake.common.util.SchemaHelper;
 import net.snowflake.client.jdbc.SnowflakeConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +35,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * A class which accesses Snowflake API to do actions used by batch source.
  */
 public class SnowflakeSourceAccessor extends SnowflakeAccessor {
-  private static final Logger LOG = LoggerFactory.getLogger(SnowflakeSinkAccessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SnowflakeSourceAccessor.class);
   // Directory should be unique, so that parallel pipelines can run correctly, as well as after failure we don't
   // have old stage files in the dir.
   private static final String STAGE_PATH = "@~/cdap_stage/result" + UUID.randomUUID() + "/";
@@ -76,7 +79,20 @@ public class SnowflakeSourceAccessor extends SnowflakeAccessor {
    */
   public List<String> prepareStageSplits() throws IOException {
     LOG.info("Loading data into stage: '{}'", STAGE_PATH);
-    String copy = String.format(COMAND_COPY_INTO, QueryUtil.removeSemicolon(config.getImportQuery()));
+    String importQuery = config.getImportQuery();
+    if (Strings.isNullOrEmpty(importQuery)) {
+      String tableName = config.getTableName();
+      Schema schema = SchemaHelper.getParsedSchema(config.getSchema());
+      if (schema != null && schema.getFields() != null && !schema.getFields().isEmpty()) {
+        String columns = schema.getFields().stream()
+          .map(Schema.Field::getName)
+          .collect(Collectors.joining(","));
+        importQuery = String.format("SELECT %s FROM %s", columns, tableName);
+      } else {
+        importQuery = String.format("SELECT * FROM %s", tableName);
+      }
+    }
+    String copy = String.format(COMAND_COPY_INTO, QueryUtil.removeSemicolon(importQuery));
     if (config.getMaxSplitSize() > 0) {
       copy = copy + String.format(COMMAND_MAX_FILE_SIZE, config.getMaxSplitSize());
     }

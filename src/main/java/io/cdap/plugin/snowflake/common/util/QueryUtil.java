@@ -16,6 +16,8 @@
 
 package io.cdap.plugin.snowflake.common.util;
 
+import com.google.common.base.Strings;
+
 /**
  * Transforms import query.
  */
@@ -29,6 +31,9 @@ public class QueryUtil {
   }
 
   public static String removeSemicolon(String importQuery) {
+    if (Strings.isNullOrEmpty(importQuery)) {
+      return null;
+    }
     if (importQuery.endsWith(";")) {
       importQuery = importQuery.substring(0, importQuery.length() - 1);
     }
