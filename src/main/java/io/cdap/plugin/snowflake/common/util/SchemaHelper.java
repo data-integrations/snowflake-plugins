@@ -27,11 +27,13 @@ import io.cdap.plugin.snowflake.source.batch.SnowflakeBatchSourceConfig;
 import io.cdap.plugin.snowflake.source.batch.SnowflakeInputFormatProvider;
 import io.cdap.plugin.snowflake.source.batch.SnowflakeSourceAccessor;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 
 /**
  * Resolves schema.
@@ -58,6 +60,13 @@ public class SchemaHelper {
   private SchemaHelper() {
   }
 
+  /**
+   * Retrieves schema for the Snowflake batch source based on the given configuration.
+   *
+   * @param config    The configuration for Snowflake batch source
+   * @param collector The failure collector to capture any schema retrieval errors.
+   * @return The resolved schema for Snowflake source
+   */
   public static Schema getSchema(SnowflakeBatchSourceConfig config, FailureCollector collector) {
     if (!config.canConnect()) {
       return getParsedSchema(config.getSchema());
@@ -65,16 +74,32 @@ public class SchemaHelper {
 
     SnowflakeSourceAccessor snowflakeSourceAccessor =
       new SnowflakeSourceAccessor(config, SnowflakeInputFormatProvider.PROPERTY_DEFAULT_ESCAPE_CHAR);
-    return getSchema(snowflakeSourceAccessor, config.getSchema(), collector, config.getImportQuery());
+    return getSchema(
+      snowflakeSourceAccessor,
+      config.getSchema(),
+      collector,
+      config.getTableName(),
+      config.getImportQuery()
+    );
   }
 
+  /**
+   * Retrieves schema for a Snowflake source based on the provided parameters.
+   *
+   * @param snowflakeAccessor The {@link SnowflakeSourceAccessor} used to connect to Snowflake.
+   * @param schema            A JSON-format schema string
+   * @param collector         The {@link FailureCollector} to collect errors if schema retrieval fails.
+   * @param tableName         The name of the table in Snowflake.
+   * @param importQuery       The query to fetch data from Snowflake, used when `tableName` is not provided.
+   * @return The parsed {@link Schema} if successful, or {@code null} if an error occurs.
+   */
   public static Schema getSchema(SnowflakeSourceAccessor snowflakeAccessor, String schema,
-                                 FailureCollector collector, String importQuery) {
+                                 FailureCollector collector, String tableName, String importQuery) {
     try {
       if (!Strings.isNullOrEmpty(schema)) {
         return getParsedSchema(schema);
       }
-      return Strings.isNullOrEmpty(importQuery) ? null : getSchema(snowflakeAccessor, importQuery);
+      return getSchema(snowflakeAccessor, tableName, importQuery);
     } catch (SchemaParseException e) {
       collector.addFailure(String.format("Unable to retrieve output schema. Reason: '%s'", e.getMessage()),
                            null)
@@ -84,13 +109,33 @@ public class SchemaHelper {
     }
   }
 
-  private static Schema getParsedSchema(String schema) {
+  public static Schema getParsedSchema(String schema) {
     if (Strings.isNullOrEmpty(schema)) {
       return null;
     }
     try {
       return Schema.parseJson(schema);
     } catch (IOException | IllegalStateException e) {
+      throw new SchemaParseException(e);
+    }
+  }
+
+  private static Schema getSchema(SnowflakeAccessor snowflakeAccessor, @Nullable String tableName,
+                                  @Nullable String importQuery) {
+    try {
+      List<SnowflakeFieldDescriptor> result;
+      if (!Strings.isNullOrEmpty(tableName)) {
+        result = snowflakeAccessor.getFieldDescriptors(snowflakeAccessor.getSchema(), tableName);
+      } else if (!Strings.isNullOrEmpty(importQuery)) {
+        result = snowflakeAccessor.describeQuery(importQuery);
+      } else {
+        return null;
+      }
+      List<Schema.Field> fields = result.stream()
+        .map(fieldDescriptor -> Schema.Field.of(fieldDescriptor.getName(), getSchema(fieldDescriptor)))
+        .collect(Collectors.toList());
+      return Schema.recordOf("data", fields);
+    } catch (IOException e) {
       throw new SchemaParseException(e);
     }
   }

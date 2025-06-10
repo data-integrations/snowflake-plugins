@@ -37,6 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -72,6 +73,37 @@ public class SnowflakeAccessor {
         "details see %s.", query, e.getSQLState(), e.getErrorCode(), DocumentUrlUtil.getSupportedDocumentUrl());
       throw SnowflakeErrorType.fetchProgramFailureException(e, errorReason, errorMessage);
     }
+  }
+
+  /**
+   * Returns field descriptors for specified table name
+   * @param schemaName The name of schema containing the table
+   * @param tableName The name of table whose metadata needs to be retrieved
+   * @return list of field descriptors
+   */
+  public List<SnowflakeFieldDescriptor> getFieldDescriptors(String schemaName, String tableName) {
+    List<SnowflakeFieldDescriptor> fieldDescriptors = new ArrayList<>();
+    try (Connection connection = dataSource.getConnection()) {
+      DatabaseMetaData dbMetaData = connection.getMetaData();
+      try (ResultSet columns = dbMetaData.getColumns(null, schemaName, tableName, null)) {
+        while (columns.next()) {
+          String columnName = columns.getString("COLUMN_NAME");
+          int columnType = columns.getInt("DATA_TYPE");
+          boolean nullable = columns.getInt("NULLABLE") == DatabaseMetaData.columnNullable;
+          fieldDescriptors.add(new SnowflakeFieldDescriptor(columnName, columnType, nullable));
+        }
+      }
+    } catch (SQLException e) {
+      String errorMessage = String.format(
+        "Failed to retrieve table metadata with SQL State %s and error code %s with message: %s.",
+        e.getSQLState(), e.getErrorCode(), e.getMessage()
+      );
+      String errorReason = String.format("Failed to retrieve table metadata with SQL State %s and error " +
+                                           "code %s. For more details %s", e.getSQLState(), e.getErrorCode(),
+                                         DocumentUrlUtil.getSupportedDocumentUrl());
+      throw SnowflakeErrorType.fetchProgramFailureException(e, errorReason, errorMessage);
+    }
+    return fieldDescriptors;
   }
 
   /**
@@ -192,5 +224,14 @@ public class SnowflakeAccessor {
     } catch (IOException e) {
       throw new RuntimeException("Cannot write key to temporary file", e);
     }
+  }
+
+  /**
+   * Retrieves schema name from the configuration
+   *
+   * @return The schema name
+   */
+  public String getSchema() {
+    return config.getSchemaName();
   }
 }

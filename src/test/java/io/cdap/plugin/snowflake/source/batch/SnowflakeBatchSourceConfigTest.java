@@ -20,6 +20,7 @@ import io.cdap.cdap.etl.mock.validation.MockFailureCollector;
 import io.cdap.plugin.snowflake.ValidationAssertions;
 import org.junit.Assert;
 import org.junit.Test;
+
 import java.util.Collections;
 
 /**
@@ -67,5 +68,20 @@ public class SnowflakeBatchSourceConfigTest {
 
     ValidationAssertions.assertValidationFailed(
       collector, Collections.singletonList(SnowflakeBatchSourceConfig.PROPERTY_PASSWORD));
+  }
+
+  @Test
+  public void validateTableNameAndImportQuery() {
+    SnowflakeBatchSourceConfig config =
+      new SnowflakeBatchSourceConfigBuilder(SnowflakeBatchSourceConfigBuilder.CONFIG)
+        .setTableName(null)
+        .setImportQuery(null)
+        .build();
+
+    MockFailureCollector collector = new MockFailureCollector(MOCK_STAGE);
+    config.validate(collector);
+
+    Assert.assertFalse("Both table name and import query cannot be null",
+                       collector.getValidationFailures().isEmpty());
   }
 }
