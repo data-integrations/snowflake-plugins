@@ -28,7 +28,7 @@ import io.cdap.plugin.snowflake.common.SnowflakeErrorType;
 import io.cdap.plugin.snowflake.common.exception.ConnectionTimeoutException;
 import io.cdap.plugin.snowflake.common.util.DocumentUrlUtil;
 import io.cdap.plugin.snowflake.common.util.QueryUtil;
-import net.snowflake.client.jdbc.SnowflakeBasicDataSource;
+import net.snowflake.client.internal.api.implementation.datasource.SnowflakeBasicDataSource;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.BufferedWriter;
@@ -154,10 +154,10 @@ public class SnowflakeAccessor {
 
     if (Boolean.TRUE.equals(config.getOauth2Enabled())) {
       String accessToken = OAuthUtil.getAccessTokenByRefreshToken(HttpClients.createDefault(), config);
-      dataSource.setOauthToken(accessToken);
-      // The recommend way to pass token is in the password when you use the driver with connection pool.
-      // This is also a mandatory field, so adding the same.
-      // Refer https://github.com/snowflakedb/snowflake-jdbc/issues/1175
+      // In JDBC 4.x, setOauthToken() was removed. The recommended approach is to explicitly
+      // set the authenticator to "oauth" and pass the access token as the password.
+      // Migration guide: https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-migration
+      dataSource.setAuthenticator("oauth");
       dataSource.setPassword(accessToken);
     } else if (Boolean.TRUE.equals(config.getKeyPairEnabled())) {
       dataSource.setUser(config.getUsername());
