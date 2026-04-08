@@ -22,7 +22,8 @@ import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessor;
 import io.cdap.plugin.snowflake.common.util.QueryUtil;
 import io.cdap.plugin.snowflake.common.util.SchemaHelper;
-import net.snowflake.client.jdbc.SnowflakeConnection;
+import net.snowflake.client.api.connection.DownloadStreamConfig;
+import net.snowflake.client.api.connection.SnowflakeConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -131,8 +132,9 @@ public class SnowflakeSourceAccessor extends SnowflakeAccessor {
    */
   public CSVReader buildCsvReader(String stageSplit) throws IOException {
     try (Connection connection = dataSource.getConnection()) {
+      DownloadStreamConfig downloadStreamConfig = DownloadStreamConfig.builder().setDecompress(true).build();
       InputStream downloadStream = connection.unwrap(SnowflakeConnection.class)
-        .downloadStream("@~", stageSplit, true);
+              .downloadStream("@~", stageSplit, downloadStreamConfig);
       InputStreamReader inputStreamReader = new InputStreamReader(downloadStream);
       return new CSVReader(inputStreamReader, ',', '"', escapeChar);
     } catch (SQLException e) {

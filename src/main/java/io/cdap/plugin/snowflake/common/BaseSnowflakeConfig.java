@@ -278,7 +278,7 @@ public class BaseSnowflakeConfig extends PluginConfig {
       && !containsMacro(PROPERTY_PASSWORD) && !containsMacro(PROPERTY_WAREHOUSE)
       && !containsMacro(PROPERTY_ROLE) && !containsMacro(PROPERTY_CLIENT_ID)
       && !containsMacro(PROPERTY_CLIENT_SECRET) && !containsMacro(PROPERTY_REFRESH_TOKEN)
-      && !containsMacro(PROPERTY_PRIVATE_KEY));
+      && !containsMacro(PROPERTY_PRIVATE_KEY) && !containsMacro(PROPERTY_PASSPHRASE));
   }
 
   protected void validateConnection(FailureCollector collector) {
@@ -299,8 +299,8 @@ public class BaseSnowflakeConfig extends PluginConfig {
         .withConfigProperty(PROPERTY_USERNAME);
 
       // TODO: for oauth2
-      if (keyPairEnabled) {
-        failure.withConfigProperty(PROPERTY_PRIVATE_KEY);
+      if (Boolean.TRUE.equals(keyPairEnabled)) {
+        failure.withConfigProperty(PROPERTY_PRIVATE_KEY).withConfigProperty(PROPERTY_PASSPHRASE);
       } else {
         failure.withConfigProperty(PROPERTY_PASSWORD);
       }

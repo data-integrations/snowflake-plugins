@@ -17,7 +17,8 @@
 package io.cdap.plugin.snowflake.sink.batch;
 
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessor;
-import net.snowflake.client.jdbc.SnowflakeConnection;
+import net.snowflake.client.api.connection.SnowflakeConnection;
+import net.snowflake.client.api.connection.UploadStreamConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -51,9 +52,10 @@ public class SnowflakeSinkAccessor extends SnowflakeAccessor {
     LOG.info("Uploading file '{}' to table stage", filename);
 
     try (Connection connection = dataSource.getConnection()) {
+      UploadStreamConfig uploadConfig = UploadStreamConfig.builder().setDestPrefix(null).setCompressData(true).build();
       connection.unwrap(SnowflakeConnection.class).uploadStream(stageDir,
-                                                                null,
-                                                                inputStream, filename, true);
+                                                                filename,
+                                                                inputStream, uploadConfig);
     } catch (SQLException e) {
       throw new IOException(e);
     }
