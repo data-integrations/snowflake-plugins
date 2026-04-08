@@ -80,6 +80,7 @@ public class SnowflakeSourceAccessor extends SnowflakeAccessor {
    * @throws IOException thrown if there are any issue with the I/O operations.
    */
   public List<String> prepareStageSplits() {
+    
     LOG.info("Loading data into stage: '{}'", STAGE_PATH);
     String importQuery = config.getImportQuery();
     if (Strings.isNullOrEmpty(importQuery)) {
