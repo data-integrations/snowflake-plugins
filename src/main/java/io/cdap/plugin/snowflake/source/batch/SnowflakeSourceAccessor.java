@@ -94,6 +94,7 @@ public class SnowflakeSourceAccessor extends SnowflakeAccessor {
         importQuery = String.format("SELECT * FROM %s", tableName);
       }
     }
+
     String copy = String.format(COMAND_COPY_INTO, QueryUtil.removeSemicolon(importQuery));
     if (config.getMaxSplitSize() > 0) {
       copy = copy + String.format(COMMAND_MAX_FILE_SIZE, config.getMaxSplitSize());
