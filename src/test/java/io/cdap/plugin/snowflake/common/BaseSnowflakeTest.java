@@ -22,7 +22,7 @@ import io.cdap.plugin.snowflake.Constants;
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessorTest;
 import io.cdap.plugin.snowflake.source.batch.SnowflakeBatchSourceConfig;
 import io.cdap.plugin.snowflake.source.batch.SnowflakeBatchSourceConfigBuilder;
-import net.snowflake.client.jdbc.SnowflakeBasicDataSource;
+import net.snowflake.client.internal.api.implementation.datasource.SnowflakeBasicDataSource;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;

@@ -19,7 +19,8 @@ package io.cdap.plugin.snowflake.sink.batch;
 import io.cdap.plugin.snowflake.common.SnowflakeErrorType;
 import io.cdap.plugin.snowflake.common.client.SnowflakeAccessor;
 import io.cdap.plugin.snowflake.common.util.DocumentUrlUtil;
-import net.snowflake.client.jdbc.SnowflakeConnection;
+import net.snowflake.client.api.connection.SnowflakeConnection;
+import net.snowflake.client.api.connection.UploadStreamConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.InputStream;
@@ -52,9 +53,10 @@ public class SnowflakeSinkAccessor extends SnowflakeAccessor {
     LOG.info("Uploading file '{}' to table stage", filename);
 
     try (Connection connection = dataSource.getConnection()) {
+      UploadStreamConfig uploadConfig = UploadStreamConfig.builder().setDestPrefix(null).setCompressData(true).build();
       connection.unwrap(SnowflakeConnection.class).uploadStream(stageDir,
-                                                                null,
-                                                                inputStream, filename, true);
+                                                                filename,
+                                                                inputStream, uploadConfig);
     } catch (SQLException e) {
       String errorReason = String.format("Unable to compress '%s' and upload data to destination stage '%s'. For " +
         "more details, see %s", filename, stageDir, DocumentUrlUtil.getSupportedDocumentUrl());
