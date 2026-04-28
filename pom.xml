@@ -40,7 +40,7 @@
     <guava.retrying.version>2.0.0</guava.retrying.version>
     <commons-codec.version>1.4</commons-codec.version>
     <commons-validator.version>1.4.1</commons-validator.version>
-    <commons-lang.version>3.9</commons-lang.version>
+    <commons-lang.version>3.18.0</commons-lang.version>
     <awaitility.version>3.1.6</awaitility.version>
     <junit.version>4.11</junit.version>
     <mockito.version>1.10.19</mockito.version>
