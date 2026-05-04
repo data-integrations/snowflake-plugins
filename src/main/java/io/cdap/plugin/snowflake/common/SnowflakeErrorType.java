@@ -22,7 +22,7 @@ import io.cdap.cdap.api.exception.ErrorType;
 import io.cdap.cdap.api.exception.ErrorUtils;
 import io.cdap.cdap.api.exception.ProgramFailureException;
 import io.cdap.plugin.snowflake.common.util.DocumentUrlUtil;
-import net.snowflake.client.jdbc.ErrorCode;
+import net.snowflake.client.api.exception.ErrorCode;
 
 import java.sql.SQLException;
 import java.util.Arrays;
